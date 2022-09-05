@@ -1,0 +1,12 @@
+{
+  "login": {
+    "username": "issa.memari@gmail.com",
+    "password": "P7a5bpkxAHTgGCE",
+    "url": "https://v70-auth.paris.fr/auth/realms/paris/protocol/openid-connect/auth?client_id=moncompte&response_type=code&redirect_uri=https%3A%2F%2Fmoncompte.paris.fr%2Fmoncompte%2Fservlet%2Fplugins%2Foauth2%2Fcallback%3Fdata_client%3DauthData&scope=openid&state=88c23b0ff5a4&nonce=fc1ecde3094c"
+  },
+  "courts": {
+    "covered": ["1111", "1112", "1113", "1114"],
+    "uncovered": []
+  },
+  "search_url": "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=recherche&view=recherche_creneau#!"
+}
