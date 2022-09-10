@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -24,7 +26,7 @@ def reformat_date_and_time(date: str, time: str):
 class Booker:
     def __init__(self, login_url: str, username: str, password: str):
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
         self.driver = webdriver.Chrome(
@@ -80,7 +82,9 @@ class Booker:
         # Elisabeth is leaflet 18
         self.driver.execute_script("arguments[0].click();", leaflets[18])
 
-        link = self.driver.find_element(by=By.CLASS_NAME, value="accessTennisMap")
+        link = WebDriverWait(self.driver, 1).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "accessTennisMap"))
+        )
         link.send_keys("\n")
 
         times = self.driver.find_elements(by=By.CLASS_NAME, value="panel-title")
@@ -149,7 +153,9 @@ class Booker:
                 break
 
         if not found:
-            raise CarnetIsEmptyException(f"Account {self.username} has an empty carnet.")
+            raise CarnetIsEmptyException(
+                f"Account {self.username} has an empty carnet."
+            )
 
         submit_button = self.driver.find_element(by=By.ID, value="submit")
         submit_button.click()
