@@ -83,9 +83,13 @@ class Booker:
         # Elisabeth is leaflet 18
         self.driver.execute_script("arguments[0].click();", leaflets[18])
 
-        link = WebDriverWait(self.driver, 1).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "accessTennisMap"))
-        )
+        try:
+            link = WebDriverWait(self.driver, 1).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "accessTennisMap"))
+            )
+        except:
+            raise DateTimeNotAvailableException(f"Date {date} not available.")
+
         link.send_keys("\n")
 
         times = self.driver.find_elements(by=By.CLASS_NAME, value="panel-title")
