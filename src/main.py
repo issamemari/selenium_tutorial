@@ -15,7 +15,6 @@ from exceptions import (
 )
 
 
-
 def worker(booker, booked_event, search_url, court_ids, date, time):
     while True:
         try:
@@ -40,7 +39,7 @@ def worker(booker, booked_event, search_url, court_ids, date, time):
                 "stacktrace": traceback.format_exc(),
             }
             logging.error("unexpected exception", dic)
-            break
+            continue
         else:
             booked_event.set()
             dic = {
@@ -58,6 +57,7 @@ def main():
     parser.add_argument("--date", type=str, help="format: 01/01/2022", required=True)
     parser.add_argument("--time", type=str, help="format: 08h", required=True)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--headless", action="store_true", default=False)
     args = parser.parse_args()
 
     zlog.configure(pretty=True)
@@ -75,7 +75,10 @@ def main():
     for account in config["login"]["accounts"][:1]:
         for _ in range(args.workers):
             booker = Booker(
-                config["login"]["url"], account["username"], account["password"]
+                config["login"]["url"],
+                account["username"],
+                account["password"],
+                headless=args.headless,
             )
             thread = Thread(
                 target=worker,

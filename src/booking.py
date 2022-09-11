@@ -24,9 +24,10 @@ def reformat_date_and_time(date: str, time: str):
 
 
 class Booker:
-    def __init__(self, login_url: str, username: str, password: str):
+    def __init__(self, login_url: str, username: str, password: str, headless: bool):
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        if headless:
+            options.add_argument("--headless")
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
         self.driver = webdriver.Chrome(
