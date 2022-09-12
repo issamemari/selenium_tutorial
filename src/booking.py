@@ -70,7 +70,7 @@ class Booker:
                 by=By.XPATH, value=f"//div[@dateiso='{date}']"
             )
             self.driver.execute_script("arguments[0].click();", date_element)
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             logging.error(
                 "Failed to find date element. Date {date} is not available.",
                 {"exception": str(e)},
