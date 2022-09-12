@@ -1,19 +1,17 @@
 import sys
 import logging.config
 
-#from formatter import LogFormatterFactory
-
 
 LOGGING_CONFIG = {
     "version": 1,
     "disable_existing_loggers": True,
-    "root": {"level": "INFO", "handlers": ["handler"]},
+    "root": {"level": "INFO", "handlers": ["stdout_handler"]},
     "handlers": {
-        "handler": {
+        "stdout_handler": {
             "class": "logging.StreamHandler",
             "formatter": "formatter",
             "stream": sys.stdout,
-        }
+        },
     },
     "formatters": {"formatter": {"()": "zlog.formatter.LogFormatterFactory"}},
 }
