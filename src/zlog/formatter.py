@@ -74,6 +74,7 @@ class LogFormatter:
             "filename": record.filename,
             "func_name": record.funcName,
             "lineno": record.lineno,
+            "thread": record.thread
         }
 
         if record.exc_info is not None:

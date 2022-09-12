@@ -1,50 +1,17 @@
 import argparse
 import json
-import traceback
 import zlog
-import logging
 
-from datetime import datetime
 from booking import Booker
-from threading import Thread, Event, get_ident
-
-from exceptions import (
-    AlreadyReservedException,
-    CarnetIsEmptyException,
-    DateTimeNotAvailableException,
-)
+from threading import Thread, Event
 
 
 def worker(booker, booked_event, search_url, court_ids, date, time):
     while True:
-        try:
-            booker.book_court(search_url, court_ids, date, time)
-        except (
-            AlreadyReservedException,
-            CarnetIsEmptyException,
-            DateTimeNotAvailableException,
-        ) as e:
-            dic = {
-                "thread_id": get_ident(),
-                "exception": str(e),
-            }
-            logging.error("expected exception", dic)
-            continue
-        except Exception as e:
-            dic = {
-                "thread_id": get_ident(),
-                "exception": str(e),
-                "stacktrace": traceback.format_exc(),
-            }
-            logging.error("unexpected exception", dic)
-            continue
-        else:
+        success = booker.book_court(search_url, court_ids, date, time)
+        if success:
             booked_event.set()
-            dic = {
-                "thread_id": get_ident(),
-            }
-            logging.info("court booked", dic)
-            break
+            return
 
 
 def main():
