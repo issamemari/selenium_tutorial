@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -46,7 +47,7 @@ class Booker:
         self, search_url: str, court_ids: List[str], date: str, time: str,
     ) -> None:
 
-        self.driver.execute_script(f"window.open('{search_url}', 'new_window')")
+        self.driver.execute_script(f"window.open('{search_url}', '_blank').focus()")
 
         if len(self.driver.window_handles) > 1:
             self.driver.close()
