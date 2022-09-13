@@ -116,7 +116,7 @@ class Booker:
             link = WebDriverWait(self.driver, 1).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "accessTennisMap"))
             )
-        except:
+        except Exception as e:
             logging.error(
                 "Failed to find accessTennisMap element.", {"exception": str(e)}
             )
