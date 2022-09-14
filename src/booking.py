@@ -59,7 +59,7 @@ class Booker:
         try:
             when = self.driver.find_element(by="id", value="when")
             self.driver.execute_script("arguments[0].click();", when)
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             logging.error("Failed to find when element.", {"exception": str(e)})
             return False
         except Exception as e:
@@ -86,7 +86,7 @@ class Booker:
         try:
             rechercher = self.driver.find_element(by="id", value="rechercher")
             self.driver.execute_script("arguments[0].click();", rechercher)
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             logging.error("Failed to find rechercher element.", {"exception": str(e)})
             return False
         except Exception as e:
@@ -103,7 +103,7 @@ class Booker:
 
             # Elisabeth is leaflet 18
             self.driver.execute_script("arguments[0].click();", leaflets[18])
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             logging.error("Failed to find leaflet element.", {"exception": str(e)})
             return False
         except Exception as e:
@@ -172,7 +172,7 @@ class Booker:
             )
             return False
 
-        logging.info(f"Clicked on the reserve button for court {court_id}")
+        logging.info(f"Clicked on the reserve button for court {court_id}.")
 
         inputs = self.driver.find_elements(
             by=By.XPATH, value="//input[@class='form-control required']"

@@ -8,6 +8,9 @@ from threading import Thread, Event
 
 def worker(booker, booked_event, search_url, court_ids, date, time):
     while True:
+        if booked_event.isSet():
+            return
+
         success = booker.book_court(search_url, court_ids, date, time)
         if success:
             booked_event.set()
