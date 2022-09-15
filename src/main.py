@@ -3,13 +3,26 @@ import json
 import zlog
 
 from booking import Booker
-from threading import Thread, Event
+from multiprocessing import Process, Event
 
 
-def worker(booker, booked_event, search_url, court_ids, date, time):
+def worker(
+    headless,
+    booked_event,
+    login_url,
+    username,
+    password,
+    search_url,
+    court_ids,
+    date,
+    time,
+):
     while True:
-        if booked_event.isSet():
+        if booked_event.is_set():
             return
+
+        booker = Booker(headless=headless)
+        booker.login(login_url, username, password)
 
         success = booker.book_court(search_url, court_ids, date, time)
         if success:
@@ -39,33 +52,33 @@ def main():
 
     booked_event = Event()
 
-    threads = []
+    processes = []
     for account in config["login"]["accounts"][:1]:
         for _ in range(args.workers):
-            booker = Booker(
-                config["login"]["url"],
-                account["username"],
-                account["password"],
-                headless=args.headless,
-            )
-            thread = Thread(
+            process = Process(
                 target=worker,
                 args=(
-                    booker,
+                    args.headless,
                     booked_event,
+                    config["login"]["url"],
+                    account["username"],
+                    account["password"],
                     config["search_url"],
                     court_ids,
                     args.date,
                     args.time,
                 ),
             )
-            threads.append(thread)
-            thread.start()
+            processes.append(process)
+            process.start()
 
     booked_event.wait()
 
-    for thread in threads:
-        thread.join()
+    for process in processes:
+        process.terminate()
+
+    for process in processes:
+        process.join()
 
 
 if __name__ == "__main__":

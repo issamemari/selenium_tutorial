@@ -41,7 +41,7 @@ def save_page_source(driver: webdriver.Chrome, path: str) -> None:
 
 
 class Booker:
-    def __init__(self, login_url: str, username: str, password: str, headless: bool):
+    def __init__(self, headless: bool):
         options = webdriver.ChromeOptions()
         if headless:
             options.add_argument("--headless")
@@ -49,6 +49,8 @@ class Booker:
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options
         )
+
+    def login(self, login_url: str, username: str, password: str) -> None:
 
         self.driver.get(login_url)
 
@@ -63,7 +65,11 @@ class Booker:
         self.username = username
 
     def book_court(
-        self, search_url: str, court_ids: List[str], date: str, time: str,
+        self,
+        search_url: str,
+        court_ids: List[str],
+        date: str,
+        time: str,
     ) -> None:
 
         self.driver.execute_script(f"window.open('{search_url}', '_blank').focus()")
