@@ -92,7 +92,7 @@ class Booker:
             self.driver.execute_script("arguments[0].click();", date_element)
         except NoSuchElementException as e:
             logging.error(
-                "Failed to find date element. Date {date} is not available.",
+                f"Failed to find date element. Date {date} is not available.",
                 {"exception": str(e)},
             )
             return False
