@@ -1,4 +1,5 @@
 import logging
+import threading
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -6,7 +7,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -20,12 +20,31 @@ def reformat_date_and_time(date: str, time: str):
     return f"{date} {time}"
 
 
+def save_screenshot(driver: webdriver.Chrome, path: str) -> None:
+    # Ref: https://stackoverflow.com/a/52572919/
+    original_size = driver.get_window_size()
+    required_width = driver.execute_script(
+        "return document.body.parentNode.scrollWidth"
+    )
+    required_height = driver.execute_script(
+        "return document.body.parentNode.scrollHeight"
+    )
+    driver.set_window_size(required_width, required_height)
+    # driver.save_screenshot(path)  # has scrollbar
+    driver.find_element_by_tag_name("body").screenshot(path)  # avoids scrollbar
+    driver.set_window_size(original_size["width"], original_size["height"])
+
+
+def save_page_source(driver: webdriver.Chrome, path: str) -> None:
+    with open(path, "w") as f:
+        f.write(driver.page_source)
+
+
 class Booker:
     def __init__(self, login_url: str, username: str, password: str, headless: bool):
         options = webdriver.ChromeOptions()
         if headless:
             options.add_argument("--headless")
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options
@@ -150,6 +169,8 @@ class Booker:
             logging.error(
                 f"Failed to find any reserve buttons. Time {time} is not available for date {date}.",
             )
+            save_screenshot(self.driver, f"data/{threading.get_ident()}.png")
+            save_page_source(self.driver, f"data/{threading.get_ident()}.html")
             return False
 
         clicked = False
