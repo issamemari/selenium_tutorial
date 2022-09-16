@@ -1,5 +1,5 @@
 import logging
-import threading
+import os
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -175,8 +175,10 @@ class Booker:
             logging.error(
                 f"Failed to find any reserve buttons. Time {time} is not available for date {date}.",
             )
-            save_screenshot(self.driver, f"data/{threading.get_ident()}.png")
-            save_page_source(self.driver, f"data/{threading.get_ident()}.html")
+
+            pid = os.getpid()
+            save_screenshot(self.driver, f"data/{pid}.png")
+            save_page_source(self.driver, f"data/{pid}.html")
             return False
 
         clicked = False
