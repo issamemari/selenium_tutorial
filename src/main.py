@@ -8,6 +8,7 @@ from multiprocessing.synchronize import Event
 
 from tennis import (
     Facility,
+    Court,
     User,
     Booker,
     Website,
@@ -16,10 +17,10 @@ from tennis import (
     Preferences,
 )
 
-from typing import List
+from typing import List, Tuple
 
 
-def load_data(data: str):
+def load_data(data: str) -> Tuple[Website, List[User], List[Court]]:
     with open(data, "r") as f:
         data = json.load(f)
 
@@ -28,9 +29,11 @@ def load_data(data: str):
         for tennis_facility in data["tennis_facilities"]
     ]
 
-    courts = []
-    for tennis_facility in tennis_facilities:
-        courts.extend(tennis_facility.courts)
+    courts = [
+        court
+        for tennis_facility in tennis_facilities
+        for court in tennis_facility.courts
+    ]
 
     users = [User(**user) for user in data["users"]]
     website = Website(**data["website"])
@@ -131,6 +134,8 @@ def main():
     manager = multiprocessing.Manager()
     booked = manager.Event()
 
+    logging.info(f"Starting {args.workers} workers.")
+
     processes = []
     for _ in range(args.workers):
         process = multiprocessing.Process(
@@ -146,6 +151,8 @@ def main():
 
     for process in processes:
         process.join()
+
+    logging.info("Done.")
 
 
 if __name__ == "__main__":

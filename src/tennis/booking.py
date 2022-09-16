@@ -227,7 +227,7 @@ class Booker:
 
         reserve_buttons = driver.find_elements(
             by=By.XPATH,
-            value="//button[@class='btn btn-darkblue medium rollover rollover-grey buttonAllOk']",
+            value="//button[@class='btn btn-darkblue medium rollover rollover-grey buttonHasReservation']",
         )
 
         if len(reserve_buttons) == 0:
@@ -236,8 +236,8 @@ class Booker:
             )
 
             pid = os.getpid()
-            self._save_screenshot(f"data/{pid}.png")
-            self._save_page_source(f"data/{pid}.html")
+            self._save_screenshot(driver, f"data/{pid}.png")
+            self._save_page_source(driver, f"data/{pid}.html")
             return False
 
         clicked = False
@@ -247,7 +247,7 @@ class Booker:
             button_date = button.get_attribute("datedeb")
             if (
                 button_date == str(availability.date_time)
-                and button_court_id == availability.court_id
+                and button_court_id == availability.court.id
             ):
                 driver.execute_script("arguments[0].click();", button)
                 clicked = True
@@ -318,12 +318,12 @@ class Booker:
                 "court_date": availability.date_time.date,
                 "court_time": availability.date_time.time,
                 "court_id": availability.court.id,
-                "username": self.username,
+                "username": user.username,
             },
         )
         return True
 
-    def _save_screenshot(self, path: str) -> None:
+    def _save_screenshot(self, driver: webdriver.Chrome, path: str) -> None:
         # Ref: https://stackoverflow.com/a/52572919/
         original_size = driver.get_window_size()
         required_width = driver.execute_script(
@@ -336,6 +336,6 @@ class Booker:
         driver.find_element_by_tag_name("body").screenshot(path)  # avoids scrollbar
         driver.set_window_size(original_size["width"], original_size["height"])
 
-    def _save_page_source(self, path: str) -> None:
+    def _save_page_source(self, driver: webdriver.Chrome, path: str) -> None:
         with open(path, "w") as f:
             f.write(driver.page_source)
