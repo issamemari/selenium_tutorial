@@ -85,9 +85,9 @@ def main():
         "--surface-type",
         type=str,
         default=None,
-        choices=["synthetic", "beton_poreux"],
+        choices=["synthetique", "beton_poreux"],
         required=False,
-        help="Surface type (synthetic or beton_poreux). If not specified, both will be considered.",
+        help="Surface type (synthetique or beton_poreux). If not specified, both will be considered.",
     )
     parser.add_argument(
         "--court-id",

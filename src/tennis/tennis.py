@@ -10,7 +10,7 @@ class Court:
         INDOOR = "indoor"
 
     class SurfaceType(Enum):
-        SYNTHETIC = "synthetic"
+        SYNTHETIQUE = "synthetique"
         BETON_POREUX = "beton_poreux"
 
     id: str
