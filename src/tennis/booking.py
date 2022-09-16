@@ -230,6 +230,11 @@ class Booker:
             value="//button[@class='btn btn-darkblue medium rollover rollover-grey buttonHasReservation']",
         )
 
+        reserve_buttons += driver.find_elements(
+            by=By.XPATH,
+            value="//button[@class='btn btn-darkblue medium rollover rollover-grey buttonAllOk']",
+        )
+
         if len(reserve_buttons) == 0:
             logging.error(
                 f"Failed to find any reserve buttons. {availability} is not available.",
@@ -268,7 +273,7 @@ class Booker:
 
         if len(inputs) == 0:
             logging.error(
-                f"Failed to find any inputs for player information. Account {self.username} already has a reservation.",
+                f"Failed to find any inputs for player information. Account {user.username} already has a reservation.",
             )
             return False
 
