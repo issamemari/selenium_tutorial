@@ -10,9 +10,51 @@ from selenium.webdriver.chrome.service import Service
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-from .tennis import Availability
+from .tennis import Availability, Facility, Court
 from .auth import User, Website
 
+from typing import Union
+from dataclasses import dataclass
+
+
+@dataclass
+class Preferences:
+    tennis_facility: str = None
+    location: str = None
+    surface_type: str = None
+    court_id: str = None
+    username: str = None
+
+    def check(self, obj: Union[Facility, Court]) -> bool:
+        if isinstance(obj, Facility):
+            return self._check_facility(obj)
+        elif isinstance(obj, Court):
+            return self._check_court(obj)
+        elif isinstance(obj, User):
+            return self._check_user(obj)
+        raise TypeError(f"Unexpected type: {type(obj)}")
+
+    def _check_facility(self, tennis_facility: Facility) -> bool:
+        if self.tennis_facility is None:
+            return True
+        return tennis_facility == self.tennis_facility
+
+    def _check_court(self, court: Court) -> bool:
+        if self.location is not None and court.location.value != self.location:
+            return False
+        if (
+            self.surface_type is not None
+            and court.surface_type.value != self.surface_type
+        ):
+            return False
+        if self.court_id is not None and court.id != self.court_id:
+            return False
+        return True
+
+    def _check_user(self, user: User) -> bool:
+        if self.username is not None and user.username != self.username:
+            return False
+        return True
 
 
 class Booker:
@@ -52,7 +94,6 @@ class Booker:
         return webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=options
         )
-
 
     def _login(self, driver: webdriver.Chrome, user: User) -> None:
         """

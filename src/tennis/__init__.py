@@ -1,3 +1,3 @@
-from .booking import Booker
-from .tennis import TennisCourt, TennisFacility, DateTime, Availability
+from .booking import Booker, Preferences
+from .tennis import Court, Facility, DateTime, Availability
 from .auth import User, Website

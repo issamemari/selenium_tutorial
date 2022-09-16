@@ -2,12 +2,40 @@ import argparse
 import zlog
 import multiprocessing
 import logging
+import json
 
 from multiprocessing.synchronize import Event
 
-from tennis import TennisFacility, User, Booker, Website, Availability, DateTime
-from utils import load_json
+from tennis import (
+    Facility,
+    User,
+    Booker,
+    Website,
+    Availability,
+    DateTime,
+    Preferences,
+)
+
 from typing import List
+
+
+def load_data(data: str):
+    with open(data, "r") as f:
+        data = json.load(f)
+
+    tennis_facilities = [
+        Facility.from_dict(tennis_facility)
+        for tennis_facility in data["tennis_facilities"]
+    ]
+
+    courts = []
+    for tennis_facility in tennis_facilities:
+        courts.extend(tennis_facility.courts)
+
+    users = [User(**user) for user in data["users"]]
+    website = Website(**data["website"])
+
+    return website, users, courts
 
 
 def worker(
@@ -81,47 +109,24 @@ def main():
 
     zlog.configure(pretty=args.logger_pretty)
 
-    data = load_json(args.data)
+    preferences = Preferences(
+        tennis_facility=args.tennis_facility,
+        location=args.location,
+        surface_type=args.surface_type,
+        court_id=args.court_id,
+        username=args.username,
+    )
 
-    tennis_facilities = []
-    for tennis_facility in data["tennis_facilities"]:
-        if (
-            args.tennis_facility is not None
-            and tennis_facility["name"] != args.tennis_facility
-        ):
-            continue
+    website, users, courts = load_data(args.data)
 
-        tennis_facilities.append(TennisFacility.from_dict(tennis_facility))
+    users = [user for user in users if preferences.check(user)]
+    courts = [court for court in courts if preferences.check(court)]
 
-    courts = []
-    for tennis_facility in tennis_facilities:
-        for court in tennis_facility.courts:
-            if args.location and court.location.value != args.location:
-                continue
-
-            if args.surface_type and court.surface_type.value != args.surface_type:
-                continue
-
-            if args.court_id and court.id != args.court_id:
-                continue
-
-            courts.append(court)
-
-    users = data["users"]
-    users = []
-    for user in data["users"]:
-        if args.username and user["username"] != args.username:
-            continue
-        users.append(User(**user))
-
-    website = Website(**data["website"])
-
+    date_time = DateTime(args.date, args.time)
     availabilities = []
     for court in courts:
-        availabilities.append(
-            Availability(date_time=DateTime(args.date, args.time), court=court)
-        )
-        logging.info(f"Will try to book availability: {availabilities[-1]}")
+        availabilities.append(Availability(date_time, court))
+        logging.info(f"Availability {availabilities[-1]} will be considered.")
 
     manager = multiprocessing.Manager()
     booked = manager.Event()

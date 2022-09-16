@@ -4,7 +4,7 @@ from enum import Enum
 
 
 @dataclass
-class TennisCourt:
+class Court:
     class Location(Enum):
         OUTDOOR = "outdoor"
         INDOOR = "indoor"
@@ -36,29 +36,29 @@ class DateTime:
 
 
 @dataclass
-class TennisFacility:
+class Facility:
     name: str
     leaflet_index: int
-    courts: List[TennisCourt]
+    courts: List[Court]
 
     def __str__(self) -> str:
         return self.name
 
     @staticmethod
-    def from_dict(data: dict) -> "TennisFacility":
+    def from_dict(data: dict) -> "Facility":
         courts = []
         for court in data["courts"]:
             courts.append(
-                TennisCourt(
+                Court(
                     id=court["id"],
                     name=court["name"],
                     facility_name=data["name"],
-                    location=TennisCourt.Location(court["location"]),
-                    surface_type=TennisCourt.SurfaceType(court["surface_type"]),
+                    location=Court.Location(court["location"]),
+                    surface_type=Court.SurfaceType(court["surface_type"]),
                 )
             )
 
-        return TennisFacility(
+        return Facility(
             name=data["name"], leaflet_index=data["leaflet_index"], courts=courts,
         )
 
@@ -66,7 +66,7 @@ class TennisFacility:
 @dataclass
 class Availability:
     date_time: DateTime
-    court: TennisCourt
+    court: Court
 
     def __str__(self) -> str:
         return f"{self.court} {self.date_time}"
