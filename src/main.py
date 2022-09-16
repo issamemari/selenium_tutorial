@@ -123,6 +123,9 @@ def main():
     website, users, courts = load_data(args.data)
 
     users = [user for user in users if preferences.check(user)]
+    for user in users:
+        logging.info(f"Will use user: {user}")
+
     courts = [court for court in courts if preferences.check(court)]
 
     date_time = DateTime(args.date, args.time)
