@@ -7,8 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
-
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 from .tennis import Availability, Facility, Court
 from .auth import User, Website
@@ -87,12 +86,14 @@ class Booker:
         webdriver.Chrome
             Chrome driver
         """
-        options = webdriver.ChromeOptions()
+        options = Options()
         if self.headless:
+            options.add_argument("--no-sandbox")
             options.add_argument("--headless")
+            options.add_argument("--disable-dev-shm-usage")
 
         return webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()), options=options
+            service=Service("/usr/local/bin/chromedriver"), options=options
         )
 
     def _login(self, driver: webdriver.Chrome, user: User) -> None:
