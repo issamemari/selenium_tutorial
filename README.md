@@ -8,7 +8,7 @@ Tennis Booker uses Selenium to interact with the tennis court booking website. I
 
 The ideal way to use this tool is to run it before going to sleep and set it to book a court for next week. When the new courts are made available at 8am, the booker will book the first available court that matches the criteria.
 
-## Configuring Users
+## Configuring users
 
 A list of usernames and passwords are stored in `data.json`. The booker requires that the user has bought a carnet of 10 tennis courts, otherwise it will not work as payment would be required.
 
@@ -60,10 +60,13 @@ Book an indoor court with synthetic surface on 24/09/2022 at 9pm using 16 worker
 docker run booker --date 24/09/2022 --time 21h --location indoor --surface-type synthetique --workers 16 --username issa.memari@gmail.com
 ```
 
-## Supported Tennis Facilities and Courts
+## Supported Courts
 
-| Tennis Facility | Indoor Courts | Outdoor Courts |
-| --------------- | ------------- | -------------- |
-| Elisabeth       | 4             | 0              |
+| Tennis Facility | Location | Surface Type | Court ID | Court Name |
+| --------------- | -------- | ------------ | -------- | ---------- |
+| Elisabeth       | Indoor   | Béton poreux | 1111     | Court 6    |
+| Elisabeth       | Indoor   | Béton poreux | 1112     | Court 7    |
+| Elisabeth       | Indoor   | Synthétique  | 1113     | Court 8    |
+| Elisabeth       | Indoor   | Synthétique  | 1114     | Court 9    |
 
 New facilities and courts can be added by modifying `data.json`.
