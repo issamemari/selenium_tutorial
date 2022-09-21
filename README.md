@@ -6,6 +6,10 @@ Tennis booker is a tool that automatically books a municipal tennis court in Par
 
 Tennis Booker uses Selenium to interact with the tennis court booking website. It uses a headless Chrome browser to simulate a user booking a court. It runs multiple processes in parallel that constantly check whether the required court is available. When a court is available, it books it.
 
+The ideal way to use this tool is to run it before going to sleep and set it to book a court for next week. When the new courts are made available at 8am, the booker will book the first available court that matches the criteria.
+
+## Configuring Users
+
 A list of usernames and passwords are stored in `data.json`. The booker requires that the user has bought a carnet of 10 tennis courts, otherwise it will not work as payment would be required.
 
 ## Installation
@@ -16,7 +20,7 @@ Simply build the Docker image:
 docker build -t booker .
 ```
 
-## Usage
+## Options
 
 ```
 docker run booker --help
