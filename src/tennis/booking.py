@@ -91,6 +91,7 @@ class Booker:
             options.add_argument("--no-sandbox")
             options.add_argument("--headless")
             options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--disk-cache-size=0")
 
         return webdriver.Chrome(
             service=Service("/usr/local/bin/chromedriver"), options=options
