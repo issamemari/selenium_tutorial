@@ -1,0 +1,52 @@
+{
+  "website": {
+    "login_url": "https://v70-auth.paris.fr/auth/realms/paris/protocol/openid-connect/auth?client_id=moncompte&response_type=code&redirect_uri=https%3A%2F%2Fmoncompte.paris.fr%2Fmoncompte%2Fservlet%2Fplugins%2Foauth2%2Fcallback%3Fdata_client%3DauthData&scope=openid&state=88c23b0ff5a4&nonce=fc1ecde3094c",
+    "search_url": "https://tennis.paris.fr/tennis/jsp/site/Portal.jsp?page=recherche&view=recherche_creneau#!"
+  },
+  "users": [
+    {
+      "username": "issa.memari@gmail.com",
+      "password": ""
+    },
+    {
+      "username": "ragheedalhyder@gmail.com",
+      "password": ""
+    },
+    {
+      "username": "azarovaanne@yandex.ru",
+      "password": ""
+    }
+  ],
+  "tennis_facilities": [
+    {
+      "name": "Elisabeth",
+      "leaflet_index": 18,
+      "courts": [
+        {
+          "id": "1111",
+          "name": "Court 6",
+          "location": "indoor",
+          "surface_type": "beton_poreux"
+        },
+        {
+          "id": "1112",
+          "name": "Court 7",
+          "location": "indoor",
+          "surface_type": "beton_poreux"
+        },
+        {
+          "id": "1113",
+          "name": "Court 8",
+          "location": "indoor",
+          "surface_type": "synthetique"
+        },
+        {
+          "id": "1114",
+          "name": "Court 9",
+          "location": "indoor",
+          "surface_type": "synthetique"
+        }
+      ]
+    }
+  ]
+}
